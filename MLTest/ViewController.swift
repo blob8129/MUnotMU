@@ -110,17 +110,12 @@ class ViewController: UIViewController {
     }
     
     func processClassifications(for request: VNRequest, error: Error?) {
-        
         var unorderedPredictions = [Prediction]()
         DispatchQueue.main.async {
+            self.hideAll()
             guard let results = request.results else { return
             }
-//            if let classifications = results as? [VNClassificationObservation] {
-//                (self.manchesterLabel.isHidden, self.nyLabel.isHidden) =  self.format(res: classifications)
-//            }
-
             if let classifications = results as? [VNCoreMLFeatureValueObservation] {
-                print("Results count \(classifications.count)")
                 
                 let confidenceThreshold = 0.1
                 let coordinates = classifications[0].featureValue.multiArrayValue!
@@ -148,27 +143,13 @@ class ViewController: UIViewController {
                         let w = coordinatesPointer[b * 4 + 2]
                         let h = coordinatesPointer[b * 4 + 3]
                         
-                     //  let rect = CGRect(x: CGFloat(x - w/2), y: -CGFloat(y - h/2),  width: CGFloat(w), height: CGFloat(h))
-                        let rect = CGRect(x: CGFloat(x - h/2), y: -CGFloat(y + h/2), width: CGFloat(w), height: CGFloat(h))
+                        let rect = CGRect(x: CGFloat(x - w/2), y: -CGFloat(y + h/2), width: CGFloat(w), height: CGFloat(h))
                         let prediction = Prediction(labelIndex: maxIndex,
                                                     confidence: Float(maxConfidence),
                                                     boundingBox: rect)
-                        print("rect")
-                    //    let (xx, yy, ww, hh) = (self.previewView.frame.origin.x, self.previewView.frame.origin.y, self.previewView.frame.width, self.previewView.frame.height)
-                    //    let scaledRect = CGRect(x: rect.origin.x * xx, y: rect.origin.y * yy, width: rect.width * ww, height: rect.height * hh)
-                //        let scaledRect = CGRect(x: rect.origin.x * 100, y: rect.origin.y * 100, width: rect.width * 100, height: rect.height * 100)
-                     //   self.draw(rec: prediction.boundingBox)
-                        
                         unorderedPredictions.append(prediction)
                     }
                 }
-                
-               
-//                classifications.forEach {
-//                    print("0 \($0.featureValue.multiArrayValue?.shape[0].intValue) 0")
-//                    print("1 \($0.featureValue.multiArrayValue?.shape[1].intValue) 1")
-//                }
-//                print("\n\n")
             }
             let max = unorderedPredictions.reduce(unorderedPredictions.first) { accum, pred -> Prediction?  in
                 if accum == nil { return nil }
@@ -178,18 +159,15 @@ class ViewController: UIViewController {
                 self.previewView.removeMask()
             } else {
                 self.draw(rec: max!.boundingBox)
+                (self.manchesterLabel.isHidden, self.nyLabel.isHidden) = self.format(for: max!.labelIndex)
             }
-            
-         //   print(self.unorderedPredictions)
-        //    if self.unorderedPredictions.last != nil  { self.previewView.drawLayer(in:  self.unorderedPredictions.last!.boundingBox) }
-
         }
     }
     
     func draw(rec: CGRect) {
         previewView.removeMask()
         let transform = CGAffineTransform(scaleX: 1, y: -1)
-            .translatedBy(x: 0, y: 0)
+         //   .translatedBy(x: 0, y: 0)
        
         let translate = CGAffineTransform.identity
             .scaledBy(x: previewView.frame.width, y: previewView.frame.height)
@@ -198,6 +176,14 @@ class ViewController: UIViewController {
         previewView.drawLayer(in: rectBounds)
     }
     
+    private func format(for index: Int) -> (Bool, Bool) {
+        return index == 0 ? (false, true):  (true, true)
+    }
+    
+    private func hideAll() {
+        manchesterLabel.isHidden = true
+        nyLabel.isHidden = true
+    }
     
     private func format(res: [VNClassificationObservation]) -> (Bool, Bool) {
         let max = res.reduce(res[0]) { accum, res in
