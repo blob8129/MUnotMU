@@ -88,60 +88,73 @@ class ViewController: UIViewController {
     }
     
     func processClassifications(for request: VNRequest, error: Error?) {
-        var unorderedPredictions = [Prediction]()
         DispatchQueue.main.async {
-            self.hideAll()
-            guard let results = request.results else { return }
-            if let classifications = results as? [VNCoreMLFeatureValueObservation] {
-                
-                let confidenceThreshold = 0.1
-                let coordinates = classifications[0].featureValue.multiArrayValue!
-                let confidence = classifications[1].featureValue.multiArrayValue!
-
-                let numBoundingBoxes = confidence.shape[0].intValue
-                let numClasses = confidence.shape[1].intValue
-               
-                let confidencePointer = UnsafeMutablePointer<Double>(OpaquePointer(confidence.dataPointer))
-                let coordinatesPointer = UnsafeMutablePointer<Double>(OpaquePointer(coordinates.dataPointer))
-
-                for b in 0..<numBoundingBoxes {
-                    var maxConfidence = 0.0
-                    var maxIndex = 0
-                    for c in 0..<numClasses {
-                        let conf = confidencePointer[b * numClasses + c]
-                        if conf > maxConfidence {
-                            maxConfidence = conf
-                            maxIndex = c
-                        }
-                    }
-                    if maxConfidence > confidenceThreshold {
-                        let x = coordinatesPointer[b * 4]
-                        let y = coordinatesPointer[b * 4 + 1]
-                        let w = coordinatesPointer[b * 4 + 2]
-                        let h = coordinatesPointer[b * 4 + 3]
-                        
-                        let rect = CGRect(x: CGFloat(x - w/2), y: -CGFloat(y + h/2), width: CGFloat(w), height: CGFloat(h))
-                        let prediction = Prediction(labelIndex: maxIndex,
-                                                    confidence: Float(maxConfidence),
-                                                    boundingBox: rect)
-                        unorderedPredictions.append(prediction)
-                    }
-                }
-            }
-            let max = unorderedPredictions.reduce(unorderedPredictions.first) { accum, pred -> Prediction?  in
-                if accum == nil { return nil }
-                return accum!.confidence > pred.confidence ? accum : pred
-            }
-            if max == nil {
-                self.previewView.removeMask()
-            } else {
-                self.draw(rec: max!.boundingBox)
-                self.manchesterLabel.isHidden = max!.labelIndex == 0 ? false : true 
-            }
+            let unorderedPredictions = self.extractPredictions(from: request)
+            let maxPrediction = self.max(predictions: unorderedPredictions)
+            self.render(prediction: maxPrediction)
         }
     }
     
-    func draw(rec: CGRect) {
+    private func extractPredictions(from request: VNRequest) -> [Prediction] {
+        var unorderedPredictions = [Prediction]()
+        self.hideAll()
+        guard let classifications = request.results as? [VNCoreMLFeatureValueObservation] else {
+            return  [Prediction]()
+        }
+        
+        let confidenceThreshold = 0.1
+        let coordinates = classifications[0].featureValue.multiArrayValue!
+        let confidence = classifications[1].featureValue.multiArrayValue!
+        
+        let numBoundingBoxes = confidence.shape[0].intValue
+        let numClasses = confidence.shape[1].intValue
+        
+        let confidencePointer = UnsafeMutablePointer<Double>(OpaquePointer(confidence.dataPointer))
+        let coordinatesPointer = UnsafeMutablePointer<Double>(OpaquePointer(coordinates.dataPointer))
+        
+        for b in 0..<numBoundingBoxes {
+            var maxConfidence = 0.0
+            var maxIndex = 0
+            for c in 0..<numClasses {
+                let conf = confidencePointer[b * numClasses + c]
+                if conf > maxConfidence {
+                    maxConfidence = conf
+                    maxIndex = c
+                }
+            }
+            if maxConfidence > confidenceThreshold {
+                let x = coordinatesPointer[b * 4]
+                let y = coordinatesPointer[b * 4 + 1]
+                let w = coordinatesPointer[b * 4 + 2]
+                let h = coordinatesPointer[b * 4 + 3]
+                
+                let rect = CGRect(x: CGFloat(x - w/2), y: -CGFloat(y + h/2), width: CGFloat(w), height: CGFloat(h))
+                let prediction = Prediction(labelIndex: maxIndex,
+                                            confidence: Float(maxConfidence),
+                                            boundingBox: rect)
+                unorderedPredictions.append(prediction)
+            }
+        }
+        return unorderedPredictions
+    }
+    
+    private func render(prediction: Prediction?) {
+        guard let prediction = prediction else {
+            self.previewView.removeMask()
+            return
+        }
+        self.draw(rec: prediction.boundingBox)
+        self.manchesterLabel.isHidden = prediction.labelIndex == 0 ? false : true
+    }
+    
+    private func max(predictions: [Prediction]) -> Prediction? {
+        guard let first = predictions.first else { return nil }
+        return predictions.reduce(first) { accum, pred -> Prediction  in
+            return accum.confidence > pred.confidence ? accum : pred
+        }
+    }
+    
+    private func draw(rec: CGRect) {
         previewView.removeMask()
         let transform = CGAffineTransform(scaleX: 1, y: -1)
         let translate = CGAffineTransform.identity
@@ -166,7 +179,7 @@ class ViewController: UIViewController {
         return max.identifier == "manch" ? (false, true):  (true, false)
     }
     
-    func exifOrientationFromDeviceOrientation() -> Int32 {
+    private func exifOrientationFromDeviceOrientation() -> Int32 {
         enum DeviceOrientation: Int32 {
             case top0ColLeft = 1
             case top0ColRight = 2
@@ -195,17 +208,16 @@ class ViewController: UIViewController {
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            return
-        }
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         var requestOptions = [VNImageOption: Any]()
-
+        
         if let cameraIntrinsicsData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
             requestOptions = [.cameraIntrinsics: cameraIntrinsicsData]
         }
-        let ex = self.exifOrientationFromDeviceOrientation()
+        let ex = exifOrientationFromDeviceOrientation()
+        
         let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer,
                                             orientation: CGImagePropertyOrientation(rawValue: UInt32(ex))!,
                                             options: requestOptions)

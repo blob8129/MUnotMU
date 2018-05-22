@@ -84,11 +84,11 @@
 				CE47BB711FE12AD500B8D288 /* manchester.mlmodel */,
 				CE47BB491FDEBFBF00B8D288 /* AppDelegate.swift */,
 				CE47BB4B1FDEBFBF00B8D288 /* ViewController.swift */,
+				CE47BB6F1FDEE6AB00B8D288 /* PrviewView.swift */,
 				CE47BB4D1FDEBFBF00B8D288 /* Main.storyboard */,
 				CE47BB501FDEBFC000B8D288 /* Assets.xcassets */,
 				CE47BB521FDEBFC000B8D288 /* LaunchScreen.storyboard */,
 				CE47BB551FDEBFC000B8D288 /* Info.plist */,
-				CE47BB6F1FDEE6AB00B8D288 /* PrviewView.swift */,
 			);
 			path = MLTest;
 			sourceTree = "<group>";
