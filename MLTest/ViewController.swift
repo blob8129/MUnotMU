@@ -14,7 +14,6 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var previewView: PrviewView!
     @IBOutlet weak var manchesterLabel: UILabel!
-    @IBOutlet weak var nyLabel: UILabel!
     
     private var requests = [VNCoreMLRequest]()
     private var captureSession = AVCaptureSession()
@@ -42,7 +41,6 @@ class ViewController: UIViewController {
    
             request.imageCropAndScaleOption = .scaleFill
             requests.append(request)
-            
         } catch {
             print("Error \(error)")
         }
@@ -93,8 +91,7 @@ class ViewController: UIViewController {
         var unorderedPredictions = [Prediction]()
         DispatchQueue.main.async {
             self.hideAll()
-            guard let results = request.results else { return
-            }
+            guard let results = request.results else { return }
             if let classifications = results as? [VNCoreMLFeatureValueObservation] {
                 
                 let confidenceThreshold = 0.1
@@ -139,7 +136,7 @@ class ViewController: UIViewController {
                 self.previewView.removeMask()
             } else {
                 self.draw(rec: max!.boundingBox)
-                (self.manchesterLabel.isHidden, self.nyLabel.isHidden) = self.format(for: max!.labelIndex)
+                self.manchesterLabel.isHidden = max!.labelIndex == 0 ? false : true 
             }
         }
     }
@@ -159,7 +156,6 @@ class ViewController: UIViewController {
     
     private func hideAll() {
         manchesterLabel.isHidden = true
-        nyLabel.isHidden = true
     }
     
     private func format(res: [VNClassificationObservation]) -> (Bool, Bool) {
@@ -169,29 +165,6 @@ class ViewController: UIViewController {
         guard max.confidence == 1 else { return (true, true) }
         return max.identifier == "manch" ? (false, true):  (true, false)
     }
-    
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//        // Dispose of any resources that can be recreated.
-//    }
-//
-//    @IBAction func processAction(_ sender: Any) {
-//        guard let image = UIImage(named: "R")?.cgImage else {
-//            return
-//        }
-//      //  let ciImage = CIImage(cgImage: image, options: [:])
-//
-//    //    let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
-//        let handler = VNImageRequestHandler(cgImage: image, options: [:])
-//
-//        do{
-//            try handler.perform(self.requests)
-//
-//        } catch {
-//
-//            print("Error \(error)")
-//        }
-//    }
     
     func exifOrientationFromDeviceOrientation() -> Int32 {
         enum DeviceOrientation: Int32 {
@@ -237,7 +210,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                                             orientation: CGImagePropertyOrientation(rawValue: UInt32(ex))!,
                                             options: requestOptions)
         do{
-            try handler.perform(self.requests)
+            try handler.perform(requests)
         } catch {
             print("Error \(error)")
         }

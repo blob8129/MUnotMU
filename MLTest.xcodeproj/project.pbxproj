@@ -13,7 +13,6 @@
 		CE47BB511FDEBFC000B8D288 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE47BB501FDEBFC000B8D288 /* Assets.xcassets */; };
 		CE47BB541FDEBFC000B8D288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE47BB521FDEBFC000B8D288 /* LaunchScreen.storyboard */; };
 		CE47BB5F1FDEBFC000B8D288 /* MLTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47BB5E1FDEBFC000B8D288 /* MLTestTests.swift */; };
-		CE47BB6E1FDEDF3000B8D288 /* MyCustomImageClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE47BB6D1FDEDF3000B8D288 /* MyCustomImageClassifier.mlmodel */; };
 		CE47BB701FDEE6AB00B8D288 /* PrviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47BB6F1FDEE6AB00B8D288 /* PrviewView.swift */; };
 		CE47BB721FE12AD500B8D288 /* manchester.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE47BB711FE12AD500B8D288 /* manchester.mlmodel */; };
 /* End PBXBuildFile section */
@@ -39,7 +38,6 @@
 		CE47BB5A1FDEBFC000B8D288 /* MLTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MLTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE47BB5E1FDEBFC000B8D288 /* MLTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTestTests.swift; sourceTree = "<group>"; };
 		CE47BB601FDEBFC000B8D288 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CE47BB6D1FDEDF3000B8D288 /* MyCustomImageClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MyCustomImageClassifier.mlmodel; sourceTree = "<group>"; };
 		CE47BB6F1FDEE6AB00B8D288 /* PrviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrviewView.swift; sourceTree = "<group>"; };
 		CE47BB711FE12AD500B8D288 /* manchester.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = manchester.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,7 +82,6 @@
 			isa = PBXGroup;
 			children = (
 				CE47BB711FE12AD500B8D288 /* manchester.mlmodel */,
-				CE47BB6D1FDEDF3000B8D288 /* MyCustomImageClassifier.mlmodel */,
 				CE47BB491FDEBFBF00B8D288 /* AppDelegate.swift */,
 				CE47BB4B1FDEBFBF00B8D288 /* ViewController.swift */,
 				CE47BB4D1FDEBFBF00B8D288 /* Main.storyboard */,
@@ -150,7 +147,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Andrey Volobuev";
 				TargetAttributes = {
 					CE47BB451FDEBFBF00B8D288 = {
@@ -209,7 +206,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE47BB4C1FDEBFBF00B8D288 /* ViewController.swift in Sources */,
-				CE47BB6E1FDEDF3000B8D288 /* MyCustomImageClassifier.mlmodel in Sources */,
 				CE47BB4A1FDEBFBF00B8D288 /* AppDelegate.swift in Sources */,
 				CE47BB701FDEE6AB00B8D288 /* PrviewView.swift in Sources */,
 				CE47BB721FE12AD500B8D288 /* manchester.mlmodel in Sources */,
@@ -268,6 +264,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -275,6 +272,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -325,6 +323,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -332,6 +331,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
