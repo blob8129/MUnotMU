@@ -12,17 +12,14 @@ import AVFoundation
 
 class ViewController: UIViewController {
     
-    var requests = [VNCoreMLRequest]()
-
     @IBOutlet weak var previewView: PrviewView!
- //   @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var manchesterLabel: UILabel!
     @IBOutlet weak var nyLabel: UILabel!
     
-    var captureSession = AVCaptureSession()
-    var captureDevice: AVCaptureDevice!
-    var devicePosition: AVCaptureDevice.Position = .back
-    
+    private var requests = [VNCoreMLRequest]()
+    private var captureSession = AVCaptureSession()
+    private var captureDevice: AVCaptureDevice!
+    private var devicePosition: AVCaptureDevice.Position = .back
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -33,30 +30,17 @@ class ViewController: UIViewController {
         captureSession.stopRunning()
     }
     
-   
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-     //   let (x, y, w, h) = (previewView.frame.origin.x, previewView.frame.origin.y, previewView.frame.width, previewView.frame.height)
-   //     let rect = CGRect(x: x * 0.2, y: y * 0.2, width: w * 0.2, height: h * 0.4)
-     //   previewView.drawLayer(in: rect)
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
-         //    let model = try VNCoreMLModel(for: mobilenet_v1_1_0_224_1().model)
-        //     let model = try VNCoreMLModel(for: MyCustomImageClassifier().model)
             let mlmodel = manchester().model
             let model = try VNCoreMLModel(for: mlmodel)
-            
-            let userDefined = mlmodel.modelDescription.metadata[MLModelMetadataKey.creatorDefinedKey] as! [String: String]
-            let labels = userDefined["classes"]
             
             let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                 self?.processClassifications(for: request, error: error)
             })
    
             request.imageCropAndScaleOption = .scaleFill
-            //request.imageCropAndScaleOption = .centerCrop
             requests.append(request)
             
         } catch {
@@ -77,9 +61,7 @@ class ViewController: UIViewController {
     func beginSession () {
         do {
             let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
-            
             captureSession.addInput(captureDeviceInput)
-            
         }catch {
             print(error.localizedDescription)
         }
@@ -97,9 +79,7 @@ class ViewController: UIViewController {
         }
         
         captureSession.commitConfiguration()
-        
- 
-        let queue = DispatchQueue(label: "com.brianadvent.captureQueue")
+        let queue = DispatchQueue(label: "com.blob8129")
         dataOutput.setSampleBufferDelegate(self, queue: queue)
     }
     
@@ -167,11 +147,8 @@ class ViewController: UIViewController {
     func draw(rec: CGRect) {
         previewView.removeMask()
         let transform = CGAffineTransform(scaleX: 1, y: -1)
-         //   .translatedBy(x: 0, y: 0)
-       
         let translate = CGAffineTransform.identity
             .scaledBy(x: previewView.frame.width, y: previewView.frame.height)
-        
         let rectBounds = rec.applying(translate).applying(transform)
         previewView.drawLayer(in: rectBounds)
     }
@@ -189,34 +166,32 @@ class ViewController: UIViewController {
         let max = res.reduce(res[0]) { accum, res in
             return res.confidence > accum.confidence ? res : accum
         }
-        print(" \(max.identifier) \(max.confidence) ")
         guard max.confidence == 1 else { return (true, true) }
         return max.identifier == "manch" ? (false, true):  (true, false)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    @IBAction func processAction(_ sender: Any) {
-        guard let image = UIImage(named: "R")?.cgImage else {
-            
-            return
-        }
-      //  let ciImage = CIImage(cgImage: image, options: [:])
-        
-    //    let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
-        let handler = VNImageRequestHandler(cgImage: image, options: [:])
-
-        do{
-            try handler.perform(self.requests)
-            
-        } catch {
-            
-            print("Error \(error)")
-        }
-    }
+//    override func didReceiveMemoryWarning() {
+//        super.didReceiveMemoryWarning()
+//        // Dispose of any resources that can be recreated.
+//    }
+//
+//    @IBAction func processAction(_ sender: Any) {
+//        guard let image = UIImage(named: "R")?.cgImage else {
+//            return
+//        }
+//      //  let ciImage = CIImage(cgImage: image, options: [:])
+//
+//    //    let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+//        let handler = VNImageRequestHandler(cgImage: image, options: [:])
+//
+//        do{
+//            try handler.perform(self.requests)
+//
+//        } catch {
+//
+//            print("Error \(error)")
+//        }
+//    }
     
     func exifOrientationFromDeviceOrientation() -> Int32 {
         enum DeviceOrientation: Int32 {
@@ -243,7 +218,6 @@ class ViewController: UIViewController {
         }
         return exifOrientation.rawValue
     }
-    
 }
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -251,31 +225,20 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            
             return
-            
         }
-        
-        //
         var requestOptions = [VNImageOption: Any]()
 
         if let cameraIntrinsicsData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
             requestOptions = [.cameraIntrinsics: cameraIntrinsicsData]
         }
-        //
-        
         let ex = self.exifOrientationFromDeviceOrientation()
         let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer,
                                             orientation: CGImagePropertyOrientation(rawValue: UInt32(ex))!,
                                             options: requestOptions)
-      //  let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
-     
-        
         do{
             try handler.perform(self.requests)
-            
         } catch {
-            
             print("Error \(error)")
         }
     }

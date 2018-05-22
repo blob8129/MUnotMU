@@ -23,45 +23,45 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="467"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="rlv-5c-LZJ">
-                                <rect key="frame" x="0.0" y="547" width="375" height="112"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manchester United" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ze1-Vb-3OX">
-                                        <rect key="frame" x="0.0" y="40.5" width="191.5" height="31.5"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                        <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York Rangers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EMJ-DC-E3o">
-                                        <rect key="frame" x="191.5" y="40.5" width="183.5" height="31.5"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                        <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bUU-8K-zQK">
-                                <rect key="frame" x="0.0" y="495" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <state key="normal" title="Stop"/>
                                 <connections>
                                     <action selector="stopAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cL5-Hd-IpL"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="rlv-5c-LZJ">
+                                <rect key="frame" x="0.0" y="487" width="375" height="136"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manchester United" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ze1-Vb-3OX">
+                                        <rect key="frame" x="0.0" y="52.5" width="191.5" height="31.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York Rangers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EMJ-DC-E3o">
+                                        <rect key="frame" x="191.5" y="52.5" width="183.5" height="31.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="bUU-8K-zQK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="2Ho-R7-c1a"/>
                             <constraint firstItem="t5a-li-lY0" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="5av-d1-hw2"/>
-                            <constraint firstItem="rlv-5c-LZJ" firstAttribute="top" secondItem="bUU-8K-zQK" secondAttribute="bottom" constant="8" id="6vh-RC-cnO"/>
-                            <constraint firstItem="bUU-8K-zQK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8Z4-gb-4ti"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bUU-8K-zQK" secondAttribute="trailing" id="IAH-qY-2eN"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="bUU-8K-zQK" secondAttribute="bottom" id="I07-Or-NvN"/>
                             <constraint firstItem="t5a-li-lY0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="MuX-A4-RWP"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="rlv-5c-LZJ" secondAttribute="bottom" constant="8" id="WMX-Jj-lst"/>
+                            <constraint firstItem="rlv-5c-LZJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Ocu-bk-LkO"/>
                             <constraint firstItem="t5a-li-lY0" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.7" id="Zso-aY-pap"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="t5a-li-lY0" secondAttribute="trailing" id="boc-Vf-YeP"/>
-                            <constraint firstItem="rlv-5c-LZJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="hVK-us-b8z"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="rlv-5c-LZJ" secondAttribute="trailing" id="m91-Vb-qUD"/>
-                            <constraint firstItem="bUU-8K-zQK" firstAttribute="top" secondItem="t5a-li-lY0" secondAttribute="bottom" constant="8" id="qCs-OX-gFA"/>
+                            <constraint firstItem="rlv-5c-LZJ" firstAttribute="top" secondItem="t5a-li-lY0" secondAttribute="bottom" id="ehn-Pw-cOS"/>
+                            <constraint firstItem="bUU-8K-zQK" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="lfq-CX-V6v"/>
+                            <constraint firstItem="bUU-8K-zQK" firstAttribute="top" secondItem="rlv-5c-LZJ" secondAttribute="bottom" id="tsg-6Z-OBF"/>
+                            <constraint firstAttribute="trailing" secondItem="rlv-5c-LZJ" secondAttribute="trailing" id="wPs-DZ-zkj"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
