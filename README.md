@@ -13,7 +13,7 @@ TL;DR Custom object detector and recognized
 <th><img src="https://github.com/blob8129/MUnotMU/blob/master/MLTest.gif?raw=true"></th>
 </tr>
 </table>
-*no hotdogs was recognized during recording
+*no hotdogs were recognized during recording
 
 ## Installation
 
